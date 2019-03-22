@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 
 unsigned int primes[] = {
      2,   3,   5,   7,  11,  13,  17,  19,  23,  29, 
@@ -13,7 +14,7 @@ unsigned int primes[] = {
 int main(int argc, char *argv[]){
 
   for(int i =0; i < 64; i++)
-    printf("%d\n", primes[i]);	  
+    printf("%3d -> %f\n", primes[i], cbrt((double) primes[i]));	  
 
   return 0;
 }
