@@ -9,6 +9,10 @@
 
 void sha256();
 
+//See Sections 4.1.2 and 4.2.2 for definitions.
+uint32_t sig0(uint32_t x);
+uint32_t sig1(uint32_t x);
+
 
 int main(int argc, char *argv[]){
   
@@ -49,6 +53,16 @@ void sha256(){
   for (t = 0; t < 16; t++)
     W[t] = M[t];
   
+  //From page 22, W[t] = ...
+  for(t = 16; t < 64; t++)
+    sig_1(W[t-2]) + W[t-7] + sig_0(W[t-15] + W[t-16];
+}
+
+uint32_t sig0(uint32_t x){
+
+}
+
+uint32_t sig1(uint32_t x){
 
 }
 
