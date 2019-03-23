@@ -29,16 +29,32 @@ void sha256(){
   //The Hash value (Section 6.2)
   //The values come from Section 5.3.3.
   uint32_t H[8] = {
-    0x6a09e667
-    0xbb67ae85
-    0x3c6ef372
-    0xa54ff53a
-    0x510e527f
-    0x9b05688c
-    0x1f83d9ab
+    0x6a09e667,
+    0xbb67ae85,
+    0x3c6ef372,
+    0xa54ff53a,
+    0x510e527f,
+    0x9b05688c,
+    0x1f83d9ab,
     0x5be0cd19
   };
 
+  //The current message block.
+  uint32_t M[16];
+  
+  //For looping.
+  int t;
+  
+  //From page 22, W[t] = M[t] for 0 <= t <=15.
+  for (t = 0; t < 16; t++)
+    W[t] = M[t];
   
 
 }
+
+
+
+
+
+
+
