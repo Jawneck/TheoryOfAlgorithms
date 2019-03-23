@@ -9,9 +9,13 @@
 
 void sha256();
 
-//See Sections 4.1.2 and 4.2.2 for definitions.
+//See Sections 4.1.2 for definitions.
 uint32_t sig0(uint32_t x);
 uint32_t sig1(uint32_t x);
+
+//See Section 3.2 for definitions.
+uint32_t rotr(uint32_t n, uint32_t x);
+uint32_t shr(uint32_t n, uint32_t x);
 
 
 int main(int argc, char *argv[]){
@@ -59,7 +63,9 @@ void sha256(){
 }
 
 uint32_t sig0(uint32_t x){
-
+  //See Sections 3.2 and 4.1.2 for definitions.
+  //ROTR_n(x) = (x >> n) | (x << (32 -n))
+  //SHR_n(x) = (x >> n) 
 }
 
 uint32_t sig1(uint32_t x){
