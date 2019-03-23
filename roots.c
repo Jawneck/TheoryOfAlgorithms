@@ -15,12 +15,14 @@ int main(int argc, char *argv[]){
   
   double cuberoot;
   double fraction;
-	
+  double multiply;
+
   for(int i =0; i < 64; i++){
     cuberoot = cbrt((double) primes[i]);
     fraction = cuberoot - floor(cuberoot);
-     
-    printf("%3d -> %f -> %f\n", primes[i], cuberoot, fraction);	  
+    multiply = fraction * 0x100000000;
+    multiply = floor(multiply);
+    printf("%3d -> %f -> %f -> %x\n", primes[i], cuberoot, fraction,(int) multiply);	  
   }
   return 0;
-}
+} 
