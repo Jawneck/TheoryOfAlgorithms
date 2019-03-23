@@ -22,8 +22,8 @@ int main(int argc, char *argv[]){
     cuberoot = cbrtl((long double) primes[i]);
     fraction = cuberoot - floor(cuberoot);
     multiply = fraction * 0x100000000;
-    multiply = floor(multiply);
-    printf("%3d -> %f -> %f -> %x\n", primes[i], cuberoot, fraction,(uint32_t) multiply);	  
+    multiply = floorl(multiply);
+    printf("%3d -> %3.6Lf -> %3.6Lf -> %08x\n", primes[i], cuberoot, fraction,(uint32_t) multiply);	  
   }
   return 0;
 } 
