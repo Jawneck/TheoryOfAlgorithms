@@ -17,12 +17,6 @@ union msgblock{
 //A flag for where we are in reading the file.
 enum status {READ, PAD0, PAD1, FINISH};
 
-
-void sha256();
-
-  FILE* f;
-  f = fopen(argv[1], "r");
-
 //See Sections 4.1.2 for definitions.
 uint32_t sig0(uint32_t x);
 uint32_t sig1(uint32_t x);
@@ -39,17 +33,33 @@ uint32_t SIG1(uint32_t x);
 uint32_t Ch(uint32_t x, uint32_t y, uint32_t z);
 uint32_t Maj(uint32_t x, uint32_t y, uint32_t z);
 
+//Calculates the SHA256 hash of a file.
+void sha256(FILE *f);
+
 //Retrieves the next message block.
 int nextmsgblock(FILE *f, union msgblock *M, enum status *S, int *nobits);
 
+//Start of the show.
 int main(int argc, char *argv[]){
   
-  sha256();
+  FILE* f;
+  f = fopen(argv[1], "r");
+
+  sha256(f);
   
   return 0;
 }
 
-void sha256(){
+void sha256(FILE *f){
+  
+  //The current message block.
+  union msgblock M;
+
+  //The number of bits read form the file.
+  uint64_t nobits = 0;
+
+  //The status of the message blocks, in terms of padding.
+  enum status S = READ;
  
   //The K constants, defined in Section 4.2.2.
   uint32_t K[] = {
@@ -90,19 +100,16 @@ void sha256(){
     0x1f83d9ab,
     0x5be0cd19
   };
-
-  //The current message block.
-  uint32_t M[16] = {0, 0, 0, 0, 0, 0, 0, 0};
   
   //For looping.
   int i, t;
   
   //Loop through message blocks as per page 22. 
-  for(i = 0; i < 1; i++){
+  while(nextmsgblock(f, M, nobits)){
 
   //From page 22, W[t] = M[t] for 0 <= t <=15.
   for (t = 0; t < 16; t++)
-    W[t] = M[t];
+    W[t] = M.t[t];
   
   //From page 22, W[t] = ...
   for(t = 16; t < 64; t++)
@@ -180,17 +187,14 @@ uint32_t Maj(uint32_t x, uint32_t y, uint32_t z){
 }
 
 int nextmsgblock(FILE *f, union msgblock *M, enum status *S, int *nobits) {
-  
-  union msgblock M;
 
-  uint64_t nobits = 0;
-
+  //The number of bytes we get from fread.
   uint64_t nobytes;
 
-  enum status S = READ;
-
+  //For looping.
   int i;  
 
+  
   while (S == READ) {
     nobytes = fread(M.e, 1, 64, f);
     printf("Read %2llu bytes\n", nobytes);
