@@ -212,45 +212,47 @@ int nextmsgblock(FILE *f, union msgblock *M, enum status *S, int *nobits) {
     //Keep the loop in sha256 going for one more iteration.
     return 1;
   }
-  //If S was PAD1, then set the first bit of M to one.
-  if(S == PAD1)
-    M.e[0] = 0x80;
-  
-  while (S == READ) {
-    nobytes = fread(M.e, 1, 64, f);
-    printf("Read %2llu bytes\n", nobytes);
-    nobits = nobits + (nobytes * 8);
-    if(nobytes < 56) {
-      printf("I've found a block with less than 55 bytes!\n");
-      M.e[nobytes] = 0x80;
-      while(nobytes < 56){
-        nobytes = nobytes + 1;
-        M.e[nobytes] = 0x00;
-      }
+
+  //If we get down here, we havn't finished reading the file.(S == READ).  
+  nobytes = fread(M->e, 1, 64, f);
+
+  //Keep track of the number of bytes we've read.
+  *nobits = *nobits + (nobytes * 8);
+  //If we read less than 56 bytes, we can put all padding in this message block.
+  if(nobytes < 56) {
+    //Add the one bit, as per the standard.
+    M->e[nobytes] = 0x80;
+    //Add zero bits until the last 64 bits.
+    while(nobytes < 56){
+      nobytes = nobytes + 1;
+      M->e[nobytes] = 0x00;
+    }
+      //Append the file size in bits as a (should be big endian) unsigned 64 bit int.
       M.s[7] = nobits;
-      S = FINISH;
+      //Tell S we are finished.
+      *S = FINISH;
+    //Otherwise, check if we can put some padding into this message block.
     } else if (nobytes < 64){
-      S = PAD0;
-      M.e[nobytes] = 0x80;
+      //Tell S we need another message block, with padding but no one bit.
+      *S = PAD0;
+      //Puyt the one bit into the current block.
+      M->e[nobytes] = 0x80;
+      //Pad the rest of the block with zero bits.
       while (nobytes < 64){
         nobytes = nobytes + 1;
         M.e[nobytes] = 0x00;
       }
+    //Otherwise, check if we're just at the end of the file.
     } else if (feof(f)){
-      S = PAD1;
+      //Tell S that we need another message block with all the padding.
+      *S = PAD1;
     }     
-  }
+    
 
-  fclose(f);
-  
-  for(int i = 0; i < 64; i++)
-    printf("%x ", M.e[i]);
-  printf("\n");
-
-  return 0;
+    fclose(f);
+    //If we get this far, the return 1 so that this function is called again.
+    return 1;
 }
-
-
 
 
 
