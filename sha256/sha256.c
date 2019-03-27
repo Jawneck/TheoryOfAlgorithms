@@ -105,7 +105,7 @@ void sha256(FILE *f){
   int i, t;
   
   //Loop through message blocks as per page 22. 
-  while(nextmsgblock(f, M, nobits)){
+  while(nextmsgblock(f, M, S,  nobits)){
 
   //From page 22, W[t] = M[t] for 0 <= t <=15.
   for (t = 0; t < 16; t++)
@@ -194,6 +194,27 @@ int nextmsgblock(FILE *f, union msgblock *M, enum status *S, int *nobits) {
   //For looping.
   int i;  
 
+  //If we have finished all the message blocks, then S should be FINISH.
+  if(*S == FINISH)
+    return 0;  
+
+  //Otherwise, check if we need another block full of padding.
+  if(*S == PAD0 || *S == PAD1){
+    //Set the first 56 bytes to all zero bits.
+    for(i = 0; i < 56; i++)
+      M->e[i] = 0x00;
+    //Set the last 64 bits to the number of bits in the file (should be big-endian).
+    M->s[7] = nobits;
+    //Tell S we are finished.
+    *S = FINISH;
+    if(S = PAD1)
+      M.e[0] = 0x80;
+    //Keep the loop in sha256 going for one more iteration.
+    return 1;
+  }
+  //If S was PAD1, then set the first bit of M to one.
+  if(S == PAD1)
+    M.e[0] = 0x80;
   
   while (S == READ) {
     nobytes = fread(M.e, 1, 64, f);
@@ -219,14 +240,6 @@ int nextmsgblock(FILE *f, union msgblock *M, enum status *S, int *nobits) {
       S = PAD1;
     }     
   }
-
-  if (S == PAD0 || S == PAD1){
-    for (i = 0; i < 56; i++)
-      M.e[i] = 0x00;
-    M.s[7] = nobits;
-  }
-  if (S == PAD1)
-    M.e[0] = 0x80;
 
   fclose(f);
   
