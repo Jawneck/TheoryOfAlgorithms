@@ -7,6 +7,17 @@
 //For using fixed-bit length integers.
 #include <stdint.h>
 
+//Represents a message block
+union msgblock{
+  uint8_t e [64];
+  uint32_t t[16];
+  uint64_t s[8];
+};
+
+//A flag for where we are in reading the file.
+enum status {READ, PAD0, PAD1, FINISH};
+
+
 void sha256();
 
 //See Sections 4.1.2 for definitions.
