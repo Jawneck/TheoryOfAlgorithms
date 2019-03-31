@@ -6,6 +6,8 @@
 #include <stdio.h>
 //For using fixed-bit length integers.
 #include <stdint.h>
+//For using exit().
+#include <stdlib.h>
 
 //Represents a message block
 union msgblock{
@@ -39,18 +41,30 @@ void sha256(FILE *f);
 //Retrieves the next message block.
 int nextmsgblock(FILE *f, union msgblock *M, enum status *S, uint64_t *nobits);
 
-//Start of the show.
-int main(int argc, char *argv[]){
-  
-  //Open the file given as first command line argument.
-  FILE* msgf;
-  msgf = fopen(argv[1], "r");
-  //Should do error checking here.
+int main(){
 
-  //Run the secure hash algorithm on the file.
+  //Open the file given as first command line argument.  
+  FILE *msgf;
+  //Store the file name in a char
+  char file[25] = "";
+
+  //Prompt the user.
+  printf("Enter path of the file you want use:\n");
+  //Scan in the file.
+  scanf("%s",&file);
+  //Open the file.
+  msgf=fopen(file,"r");
+ 
+  //If no valid file throw error
+  if(msgf==NULL){
+    printf("\nFile not found, please enter valid file path\n",file);
+    exit(EXIT_FAILURE);
+  }
+  
+  //Run the secure has algorithm on the file
   sha256(msgf);
 
-  //Close the file.
+  //Close the file
   fclose(msgf);
   
   return 0;
