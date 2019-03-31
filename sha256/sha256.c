@@ -16,27 +16,39 @@ union msgblock{
   uint64_t s[8];
 };
 
+uint64_t * sha256(FILE *f);
+
 //A flag for where we are in reading the file.
 enum status {READ, PAD0, PAD1, FINISH};
 
 //See Sections 4.1.2 for definitions.
-uint32_t sig0(uint32_t x);
-uint32_t sig1(uint32_t x);
+//uint32_t sig0(uint32_t x);
+//uint32_t sig1(uint32_t x);
 
 //See Section 3.2 for definitions.
-uint32_t rotr(uint32_t n, uint32_t x);
-uint32_t shr(uint32_t n, uint32_t x);
+//uint32_t rotr(uint32_t n, uint32_t x);
+//uint32_t shr(uint32_t n, uint32_t x);
 
 //See Section 4.1.2 for definitions.
-uint32_t SIG0(uint32_t x);
-uint32_t SIG1(uint32_t x);
+//uint32_t SIG0(uint32_t x);
+//uint32_t SIG1(uint32_t x);
 
 //See Section 4.1.2 for definitions.
-uint32_t Ch(uint32_t x, uint32_t y, uint32_t z);
-uint32_t Maj(uint32_t x, uint32_t y, uint32_t z);
+//uint32_t Ch(uint32_t x, uint32_t y, uint32_t z);
+//uint32_t Maj(uint32_t x, uint32_t y, uint32_t z);
 
 //Calculates the SHA256 hash of a file.
-void sha256(FILE *f);
+//void sha256(FILE *f);
+
+//Macros
+//https://github.com/B-Con/crypto-algorithms/blob/master/sha256.c)
+#define ROTRIGHT(a,b) (((a) >> (b)) | ((a) << (32-(b))))
+#define Ch(x,y,z) (((x) & (y)) ^ (~(x) & (z)))
+#define Maj(x,y,z) (((x) & (y)) ^ ((x) & (z)) ^ ((y) & (z)))
+#define SIG0(x) (ROTRIGHT(x,2) ^ ROTRIGHT(x,13) ^ ROTRIGHT(x,22))
+#define SIG1(x) (ROTRIGHT(x,6) ^ ROTRIGHT(x,11) ^ ROTRIGHT(x,25))
+#define sig0(x) (ROTRIGHT(x,7) ^ ROTRIGHT(x,18) ^ ((x) >> 3))
+#define sig1(x) (ROTRIGHT(x,17) ^ ROTRIGHT(x,19) ^ ((x) >> 10))
 
 //Retrieves the next message block.
 int nextmsgblock(FILE *f, union msgblock *M, enum status *S, uint64_t *nobits);
@@ -70,7 +82,8 @@ int main(){
   return 0;
 }
 
-void sha256(FILE *msgf){
+//void sha256(FILE *msgf){
+uint64_t * sha256(FILE *msgf){
   
   //The current message block.
   union msgblock M;
@@ -166,7 +179,7 @@ void sha256(FILE *msgf){
 uint32_t rotr(uint32_t n, uint32_t x){
   return (x >> n) | (x << (32 - n));
 }
-
+/*
 uint32_t shr(uint32_t n, uint32_t x){
   return (x >> n);
 }
@@ -197,7 +210,7 @@ uint32_t Ch(uint32_t x, uint32_t y, uint32_t z){
 uint32_t Maj(uint32_t x, uint32_t y, uint32_t z){
   return ((x & y) ^ (x & z) ^ (y & z));
 }
-
+*/
 int nextmsgblock(FILE *msgf, union msgblock *M, enum status *S, uint64_t *nobits) {
 
   //The number of bytes we get from fread.
