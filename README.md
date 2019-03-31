@@ -1,6 +1,7 @@
 # TheoryOfAlgorithms
 
 # About
+This project is an implentation of the SHA256 Hashing Algorith in C.
 SHA-2 (Secure Hash Algorithm 2) is a set of cryptographic hash functions designed by the United States National Security Agency (NSA), and is a U.S. Federal Information Processing Standard
 
 # How to run
@@ -10,10 +11,11 @@ SHA-2 (Secure Hash Algorithm 2) is a set of cryptographic hash functions designe
 
 # Implementation
 This project was completed entirely using VIM on Google Cloud. It was completed through the help of our lecturer Dr Ian McLoughlin.
-Time was taken to research about the SHA algorithm, and to learn some C fundamentals.
+Time was taken to research about the SHA algorithm, and to learn some C fundamentals such as bits, primes and roots.
 
-#Testing
-There is a test.txt file which contains the plain text Danielis Joniskis. The expected Hash for this text is 3a5a75009b5ec9e6eb6697f074bb05f0635def15e97e7e7d165745121e7bb5b2.
+# Testing
+There is a test.txt file in the sha256 directory which contains the plain text "Danielis Joniskis". The expected Hash for this text is "3a5a75009b5ec9e6eb6697f074bb05f0635def15e97e7e7d165745121e7bb5b2".
+The program does not output the correct hash currently.
 
 # References
 * [The Secure Hash Standard](https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf)
