@@ -21,7 +21,7 @@ sha256 $ gcc -o sha256 sha256.c
 sha256 $ ./sha256
 Enter path of the file you want use:
 test.txt
-88c4f009 83ae0851 30169d54 5c3d5620 6ca1bc63 db5957a3 c6637992 f86835a4
+5314c0d0 6dd0391e bb742929 8f674e4a a78f380f c9cb2458 53833e05 2cc115fb
 ````
 
 # References
